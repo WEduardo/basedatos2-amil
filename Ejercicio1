@@ -1,0 +1,20 @@
+-- comentario de una línea
+/*  */ comentario de varias líneas
+:= inicializar variable
+
+Programa 1:
+BEGIN
+DBMS_OUTPUT.PUT_LINE('Mi primer programa de PL/SQL');
+END;
+/
+
+Programa 2:
+DECLARE
+NOMBRE VARCHAR2(80);
+EDAD INTEGER;
+BEGIN
+NOMBRE:='Ricardo Sánchez';
+EDAD:=21;
+DBMS_OUTPUT.PUT_LINE('Hola '||NOMBRE||', tu edad es '||EDAD);
+END;
+/
