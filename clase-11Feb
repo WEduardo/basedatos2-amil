@@ -1,0 +1,35 @@
+Relación de campos de tablas a variables en PL/SQL (Introducción a los cursores)
+
+a) Relación de una sola ocurrencia:
+  Para ello se ocupa el "SELECT tu_columna INTO tu_variable_local FROM tu_tabla WHERE id=tu_id;"
+b) Relación con múltiples ocurrencias (Cursores):
+  "CURSOR tu_nombre IS SELECT * FROM tabla;"
+  
+1.- Creamos una tabla:
+CREATE TABLE empleado(ID INTEGER, Nombre VARCHAR2(120), Sueldo FLOAT);
+
+2.- Insertar 5 registros con ID consecutivo del 1 al 5 con el nombre que quieran y sueldo entre 2,000 y 10,000
+INSERT INTO empleado VALUES(1,'Ricardo',8000);
+INSERT INTO empleado VALUES(2,'Karina',5000);
+INSERT INTO empleado VALUES(3,'Mary',6500);
+INSERT INTO empleado VALUES(4,'Manolo',7000);
+INSERT INTO empleado VALUES(5,'Mar',3500);
+
+3.- Creamos un bloque PL/SQL para que a un registro le sume la cantidad de 10,000
+
+DECLARE
+nuevo_sueldo FLOAT;
+BEGIN
+SELECT sueldo INTO nuevo_sueldo FROM empleado WHERE ID=5;
+DBMS_OUTPUT.PUT_LINE('El nuevo sueldo es: ' || nuevo_sueldo);
+END;
+/
+
+DECLARE
+CURSOR cursor_empleado IS SELECT * FROM empleado;
+BEGIN
+FOR fila IN cursor_empleado LOOP
+DBMS_OUTPUT.PUT_LINE(fila.nombre || ' ' || fila.sueldo);
+END LOOP;
+END;
+/
