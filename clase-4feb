@@ -8,7 +8,7 @@ start with 1
 increment by 1
 nomaxvalue;
 /*
-Creamos el procedimiento almacenado que nos enlazara ls secuencia con la tabla dance
+Creamos el procedimiento almacenado que nos enlazara la secuencia con la tabla dance
 */
 CREATE OR REPLACE PROCEDURE GUARDAR_DANCE(MY_ID OUT INTEGER, MY_NOMBRE IN VARCHAR2)
 AS
