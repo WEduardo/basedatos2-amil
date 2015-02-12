@@ -1,235 +1,134 @@
 SET SERVEROUTPUT ON; 
-
  
 
 SELECT * FROM Sala; 
-
 SELECT * FROM Pelicula; 
 
- 
 
 CREATE TABLE Pelicula ( 
-
 ID_Pelicula INTEGER, 
-
 Titulo VARCHAR2(180), 
-
 Sinopsis VARCHAR2(400), 
-
 CONSTRAINT PK_ID_Pelicula PRIMARY KEY (ID_Pelicula)); 
 
- 
 
 CREATE TABLE Sala (ID_Sala INTEGER, 
-
 ID_Pelicula INTEGER, 
-
 numero_asientos INTEGER, 
-
 CONSTRAINT PK_ID_Sala PRIMARY KEY(ID_Sala), 
-
 CONSTRAINT FK1_ID_Pelicula FOREIGN KEY (ID_Pelicula) REFERENCES Pelicula(ID_Pelicula)); 
 
- 
 
 CREATE SEQUENCE Secuencia_Pelicula 
-
 START WITH 1 
-
 INCREMENT BY 1 
-
 NOMAXVALUE; 
 
- 
 
 CREATE SEQUENCE Secuencia_Sala 
-
 START WITH 1 
-
 INCREMENT BY 1 
-
 NOMAXVALUE; 
 
- 
 
 CREATE SEQUENCE Secuencia_Boleto 
-
 Start With 1 
-
 INCREMENT BY 1 
-
 MAXVALUE 10; 
 
- 
 
 CREATE OR REPLACE PROCEDURE GUARDAR_PELICULA(MY_ID_PELICULA OUT INTEGER, MY_TITULO IN VARCHAR2, MY_SINOPSIS VARCHAR2) 
-
 AS 
-
 BEGIN 
-
 SELECT SECUENCIA_PELICULA.NEXTVAL INTO MY_ID_PELICULA 
-
 FROM DUAL; 
-
 INSERT INTO PELICULA VALUES(MY_ID_PELICULA,MY_TITULO,MY_SINOPSIS); 
-
 END; 
-
 / 
 
- 
 
 DECLARE 
-
 VALOR INTEGER; 
-
 BEGIN 
-
 GUARDAR_PELICULA(VALOR,'Buscando a Nemo','La esposa de un hombre es brutalmente asesinada por un asesino serial y su hijo queda discapacitado, en una serie de eventos desafortunados el hijo es raptado y el hombre tiene que buscar al secuestrador a miles de kilómetros con la ayuda de una mujer con discapacidades mentales'); 
-
 DBMS_OUTPUT.PUT_LINE('Película guardada con el ID número: '||VALOR); 
-
 END; 
-
 / 
 
- 
 
 DECLARE 
-
 VALOR INTEGER; 
-
 BEGIN 
-
 GUARDAR_PELICULA(VALOR,'Toy Story 3','’Andy se despide de sus juguetes más preciados en su infancia, pero antes, sus juguetes viven una serie de aventuras'); 
-
 DBMS_OUTPUT.PUT_LINE('Película guardada con el ID número: '||VALOR); 
-
 END; 
-
 / 
 
- 
 
 DECLARE 
-
 VALOR INTEGER; 
-
 BEGIN 
-
 GUARDAR_PELICULA(VALOR,'Titanic','Uno de los transatlánticos más grandes del mundo se hunde por un desafortunado accidente en el que choca contra un iceberg'); 
-
 DBMS_OUTPUT.PUT_LINE('Película guardada con el ID número: '||VALOR); 
-
 END; 
-
 / 
 
- 
 
 CREATE OR REPLACE PROCEDURE GUARDAR_SALA(MY_ID_Sala OUT INTEGER, MY_ID_Pelicula IN INTEGER, MY_numero_asientos IN INTEGER) 
-
 AS 
-
 BEGIN 
-
 SELECT SECUENCIA_SALA.NEXTVAL INTO MY_ID_Sala FROM DUAL; 
-
 INSERT INTO SALA VALUES(MY_ID_Sala,MY_ID_Pelicula,MY_numero_asientos); 
-
 END; 
-
 / 
 
  
-
 DECLARE 
-
 VALOR INTEGER; 
-
 BEGIN 
-
 GUARDAR_SALA(VALOR,1,10); 
-
 DBMS_OUTPUT.PUT_LINE('Sala guardada con el ID número: '||VALOR); 
-
 END; 
-
 /  
 
- 
 
 DECLARE 
-
 VALOR INTEGER; 
-
 BEGIN 
-
 GUARDAR_SALA(VALOR,2,10); 
-
 DBMS_OUTPUT.PUT_LINE('Sala guardada con el ID número: '||VALOR); 
-
 END; 
-
 / 
 
- 
 
 DECLARE 
-
 VALOR INTEGER; 
-
 BEGIN 
-
 GUARDAR_SALA(VALOR,3,10); 
-
 DBMS_OUTPUT.PUT_LINE('Sala guardada con el ID número: '||VALOR); 
-
 END; 
-
 / 
 
- 
 
 CREATE OR REPLACE PROCEDURE COMPRAR_BOLETOS(MY_TITULO IN VARCHAR2, MY_ID_Sala OUT INTEGER, MY_numero_asientos IN INTEGER) 
-
 AS 
-
 asientos INTEGER; 
-
 BEGIN 
-
-SELECT numero_asientos INTO asientos FROM Sala; 
-
-IF MY_numero_asientos < asientos THEN 
-
+SELECT numero_asientos INTO asientos FROM Sala WHERE ID_Sala=MY_ID_Sala;
+IF MY_numero_asientos < asientos THEN
 SELECT Secuencia_boleto.nextval INTO MY_ID_Sala FROM dual; 
-
 UPDATE Sala SET numero_asientos=numero_asientos-MY_numero_asientos; 
-
 ELSE 
-
 RAISE_APPLICATION_ERROR(-20001,'Cantidad de boletos excede asientos disponibles'); 
-
 END IF; 
-
 END; 
-
 / 
 
- 
 
 DECLARE 
-
 VALOR INTEGER; 
-
 BEGIN 
-
 COMPRAR_BOLETOS('Titanic',VALOR,2); 
-
 DBMS_OUTPUT.PUT_LINE('Compra realizada con éxito'); 
-
 END; 
-
 / 
