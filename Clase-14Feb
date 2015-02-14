@@ -1,0 +1,16 @@
+SELECT * FROM empleado;
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+  CURSOR cursor_actualizar_empleado IS SELECT * FROM empleado FOR UPDATE;
+BEGIN
+  FOR rec IN cursor_actualizar_empleado LOOP
+    IF rec.sueldo > 6000 THEN
+      UPDATE empleado SET sueldo=rec.sueldo+2000 WHERE CURRENT OF cursor_actualizar_empleado;
+    ELSE
+      UPDATE empleado SET sueldo=rec.sueldo+1000 WHERE CURRENT OF cursor_actualizar_empleado;
+    END IF;
+  END LOOP;
+END;
+/
