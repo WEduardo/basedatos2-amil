@@ -1,0 +1,30 @@
+SET SERVEROUTPUT ON;
+
+SELECT * FROM empleado;
+
+CREATE SEQUENCE sec_reporte
+START WITH 1
+INCREMENT BY 1
+NOMAXVALUE;
+
+CREATE OR REPLACE PROCEDURE generar_reporte (MY_ID OUT INTEGER, MY_AUMENTO IN INTEGER)
+AS
+CURSOR cursor_empleado IS SELECT * FROM empleado;
+BEGIN
+SELECT sec_reporte.NEXTVAL INTO MY_ID FROM DUAL;
+IF MY_AUMENTO <= 1 OR MY_AUMENTO >= 2 THEN
+RAISE_APPLICATION_ERROR(-20001,'Error! Introducir valor entre 1.01 y 1.99');
+ELSE
+FOR fila IN cursor_empleado LOOP
+DBMS_OUTPUT.PUT_LINE(fila.nombre || ' ' || fila.sueldo || ' ' || fila.sueldo*MY_AUMENTO);
+END LOOP;
+END IF;
+END;
+/
+
+DECLARE
+valor INTEGER;
+BEGIN
+generar_reporte(VALOR,1.5);
+END;
+/
